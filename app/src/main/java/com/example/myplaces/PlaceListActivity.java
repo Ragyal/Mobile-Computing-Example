@@ -13,14 +13,15 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class PlaceListActivity extends AppCompatActivity {
 
     List<String> mPlaces;
+    ArrayAdapter<String> mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_list);
 
         final Button addButton = findViewById(R.id.add_button);
         final EditText inputField = findViewById(R.id.place_editText);
@@ -28,27 +29,30 @@ public class PlaceListActivity extends AppCompatActivity implements AdapterView.
 
         mPlaces = new ArrayList<>();
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mPlaces);
-        placesList.setAdapter(adapter);
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mPlaces);
+        placesList.setAdapter(mAdapter);
 
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPlaces.add(inputField.getText().toString());
-                adapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
             }
         });
 
+        placesList.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedPlace = mPlaces.get(position);
 
-    }
+                        Intent intent = new Intent(PlaceListActivity.this, DetailActivity.class);
+                        intent.putExtra(DetailActivity.EXTRA_PLACE_NAME, selectedPlace);
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String selectedPlace = mPlaces.get(position);
-
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(DetailActivity.EXTRA_PLACE_NAME, selectedPlace);
-        startActivity(intent);
+                        startActivity(intent);
+                    }
+                }
+        );
     }
 }

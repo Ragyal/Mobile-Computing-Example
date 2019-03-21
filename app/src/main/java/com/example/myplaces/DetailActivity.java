@@ -17,7 +17,7 @@ public class DetailActivity extends Activity {
         Intent intent = getIntent();
         String placeName = intent.getStringExtra(EXTRA_PLACE_NAME);
 
-        final TextView tv = findViewById(R.id.place_textView);
-        tv.setText(placeName);
+        TextView textView = findViewById(R.id.place_textView);
+        textView.setText(placeName);
     }
 }
